@@ -1,0 +1,4 @@
+/workspace.xml
+*.pyc
+*~
+__pycache__
