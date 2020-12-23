@@ -5,13 +5,12 @@ from bs4 import BeautifulSoup
 class MyWeather:
     """
     __init__(self, name_city)
-     wr=MyWeather('саратов')
+     wr=MyWeather('Саратов')
     """
     def __init__(self, name_city):
         res = requests.get('https://sinoptik.com.ru/{}'.format(self._get_seo_city(name_city)))
         self._soup = BeautifulSoup(res.text, 'html.parser')
         self.region=self._soup.find('div', 'header__bottom_title-region').text
-        #print(len(self._soup.find_all('div', 'weather__content_tab')))
 
     def _get_seo_city(self, name_city):
         # из результатов поиска извлекаем name_city == Административный центр
@@ -27,8 +26,8 @@ class MyWeather:
         ----------------
         get_all_weather
         return:
-        [ {'month':.., 'date':..,  'day':.., min_t:.., max_t:.., title_t:..},
-        {'month':.., 'date':..,  'day':.., min_t:.., max_t:.., title_t:..}]
+        [ {'month':.., 'date':..,  'day':.., temp:.., title_t:..},
+        {'month':.., 'date':..,  'day':.., temp:.., title_t:..}]
 
         wr=MyWeather('саратов')
         ls=wr.get_all_weather
@@ -42,8 +41,7 @@ class MyWeather:
             dict_weather['month'] = self._soup.find_all('div', 'weather__content_tab')[i].find('p','weather__content_tab-month').text
             dict_weather['date'] = self._soup.find_all('div', 'weather__content_tab')[i].find('p','weather__content_tab-date').text
             dict_weather['day'] = self._soup.find_all('div', 'weather__content_tab')[i].find('p','weather__content_tab-day').text.strip()
-            dict_weather['min_t'] = self._soup.find_all('div', 'weather__content_tab')[i].find('div', 'min').find('b').text
-            dict_weather['max_t'] = self._soup.find_all('div', 'weather__content_tab')[i].find('div', 'max').find('b').text
+            dict_weather['temp'] = self._soup.find_all('div', 'weather__content_tab')[i].find('div', 'weather__content_tab-temperature').text.replace('\n',' ')
             dict_weather['title_t'] = self._soup.find_all('div', 'weather__content_tab')[i].find('div','weather__content_tab-icon').get('title')
             ls_weather.append(dict_weather)
         return ls_weather
@@ -60,14 +58,13 @@ class MyWeather:
         dict_weather['month'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('p','weather__content_tab-month').text
         dict_weather['date'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('p','weather__content_tab-date').text
         dict_weather['day'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('p','weather__content_tab-day').text.strip()
-        dict_weather['min_t'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('div', 'min').find('b').text
-        dict_weather['max_t'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('div', 'max').find('b').text
+        dict_weather['temp'] = self._soup.find_all('div', 'weather__content_tab')[i].find('div','weather__content_tab-temperature').text.replace('\n', ' ')
         dict_weather['title_t'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('div','weather__content_tab-icon').get('title')
         return dict_weather
 
 
 if __name__=='__main__':
-    wr=MyWeather('курск')
+    wr=MyWeather('орел')
     print(wr.region)
     ls=wr.get_all_weather
 
