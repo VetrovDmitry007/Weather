@@ -1,6 +1,8 @@
+import datetime
 import requests
 from bs4 import BeautifulSoup
 #from pprint import pprint
+
 
 class MyWeather:
     """
@@ -58,16 +60,33 @@ class MyWeather:
         dict_weather['month'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('p','weather__content_tab-month').text
         dict_weather['date'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('p','weather__content_tab-date').text
         dict_weather['day'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('p','weather__content_tab-day').text.strip()
-        dict_weather['temp'] = self._soup.find_all('div', 'weather__content_tab')[i].find('div','weather__content_tab-temperature').text.replace('\n', ' ')
+        dict_weather['temp'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('div','weather__content_tab-temperature').text.replace('\n', ' ')
         dict_weather['title_t'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('div','weather__content_tab-icon').get('title')
         return dict_weather
+
+    def get_weather_tomorrow(self):
+        """
+        Возвращает погоду на завтра
+        :return:
+        """
+        w = datetime.datetime.today().weekday()
+        w += 1
+        if w == 7:
+            tw = 1
+        else:
+            tw = w+1
+        return self.get_weather(tw)
 
 
 if __name__=='__main__':
     wr=MyWeather('орел')
+    # погода на завтра
+    print(wr.get_weather_tomorrow())
+    '''
     print(wr.region)
     ls=wr.get_all_weather
 
     for i in range(7):
         for key, val in ls[i].items():
             print(key, val)
+    '''
