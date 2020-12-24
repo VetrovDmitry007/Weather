@@ -1,7 +1,7 @@
 import datetime
 import requests
 from bs4 import BeautifulSoup
-#from pprint import pprint
+from pprint import pprint
 
 
 class MyWeather:
@@ -53,8 +53,7 @@ class MyWeather:
         Возвращает список погоды на выбранный день
         --------------
         get_weather()
-        return:
-        {'month':.., 'date':..,  'day':.., min_t:.., max_t:.., title_t:..}
+        return: dict {'month':.., 'date':..,  'day':.., min_t:.., max_t:.., title_t:..}
         """
         dict_weather = {}
         dict_weather['month'] = self._soup.find_all('div', 'weather__content_tab')[num_day].find('p','weather__content_tab-month').text
@@ -67,26 +66,23 @@ class MyWeather:
     def get_weather_tomorrow(self):
         """
         Возвращает погоду на завтра
-        :return:
+        :return: dict {'month':.., 'date':..,  'day':.., min_t:.., max_t:.., title_t:..}
         """
-        w = datetime.datetime.today().weekday()
-        w += 1
-        if w == 7:
-            tw = 1
-        else:
-            tw = w+1
-        return self.get_weather(tw)
+        return self.get_all_weather[1]
 
+    def get_weather_curr(self):
+        """
+        Возвращает текущую погоду
+        :return: dict {'month':.., 'date':..,  'day':.., min_t:.., max_t:.., title_t:..}
+        """
+        return self.get_all_weather[0]
 
 if __name__=='__main__':
     wr=MyWeather('орел')
-    # погода на завтра
     print(wr.get_weather_tomorrow())
-    '''
+    print(wr.get_weather_curr())
+
     print(wr.region)
     ls=wr.get_all_weather
+    [pprint(s) for s in ls]
 
-    for i in range(7):
-        for key, val in ls[i].items():
-            print(key, val)
-    '''
